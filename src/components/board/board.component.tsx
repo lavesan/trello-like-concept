@@ -3,6 +3,7 @@ import React from 'react';
 import { IBoard } from '../../views/home/home.interfaces';
 import { StyledBoard } from './board.styles';
 import { BoardCardComponent } from '../board-card';
+import { StyledAddAction } from '../add-action';
 
 export default ({ cards, id, name }: IBoard) => {
 
@@ -16,8 +17,14 @@ export default ({ cards, id, name }: IBoard) => {
 
     return (
         <StyledBoard>
-            <ul onDrop={onDrop} onDragOver={onDragOver}>
+            <header className="title-container">
+                <input className="title-container--name-input" value={name} />
+            </header>
+            <ul className="cards-list" onDrop={onDrop} onDragOver={onDragOver}>
                 {cards.map((card, index) => <BoardCardComponent key={card.id} index={index} {...card} />)}
+                <li className="cards-list--action-li">
+                    <StyledAddAction>+ TASK</StyledAddAction>
+                </li>
             </ul>
         </StyledBoard>
     );

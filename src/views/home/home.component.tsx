@@ -10,7 +10,7 @@ export default () => {
 
     return (
         <StyledHome>
-            <section>
+            <section className="boards-section">
                 {boards.map(board => <BoardComponent key={board.id} {...board} />)}
             </section>
         </StyledHome>

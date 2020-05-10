@@ -39,15 +39,16 @@ export default ({ id, text, index }: ICardComponent) => {
     };
 
     return (
-        <StyledBoardCard
-            expandWidth={expandWidth}
-            draggable="true"
-            onDragEnd={onDragEnd}
-            onDragStart={onDragStart}
-            onDragEnter={onDragEnter}
-            onDragLeave={onDragExit}
-        >
-            {text}
+        <StyledBoardCard expandWidth={expandWidth}>
+            <div
+                className="card-container"
+                draggable="true"
+                onDragEnd={onDragEnd}
+                onDragStart={onDragStart}
+                onDragEnter={onDragEnter}
+                onDragLeave={onDragExit}>
+                {text}
+            </div>
         </StyledBoardCard>
     )
 
