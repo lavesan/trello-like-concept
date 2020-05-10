@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import { HomePage } from './views/home';
@@ -40,6 +40,16 @@ function App() {
       ],
     },
   ]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setBoards([]);
+  //   }, 5000);
+  // }, []);
+
+  useEffect(() => {
+    console.log('boards: ', boards);
+  }, [boards])
 
   return (
     <AppContext.Provider

@@ -1,53 +1,84 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 
 import { ICardComponent } from './board-card.interfaces';
 import { StyledBoardCard } from './board-card.styles';
 import { AppContext } from '../../App.context';
 
-export default ({ id, text, index }: ICardComponent) => {
+export default ({ index, children, data }: ICardComponent) => {
 
-    const { setDraggedElem, setDraggedPos } = useContext(AppContext);
-    const [expandWidth, setExpandWidth] = useState<number>(0);
+    const { setDraggedElem, setDraggedPos, boards } = useContext(AppContext);
+    const [expandHeight, setExpandHeight] = useState<number>(0);
+    const [counter, setCounter] = useState<number>(0);
+    const [deactivateTransition, setDeactivateTransition] = useState<boolean>(false);
+    const elementRef = useRef(null);
+    const itemRef = useRef(null);
+
+    const transitionTime = 300;
 
     const onDragStart = (e: any) => {
+
         const target = e.target;
-        setDraggedElem({
-            id,
-            text,
-        });
+        if (data) {
+            setDraggedElem(data);
+        }
 
         setTimeout(() => {
             target.style.display = "none";
         }, 0);
-    };
+
+    }
 
     const onDragEnd = (e: any) => {
         const target = e.target;
         target.style.display = "list-item";
-        // console.log("acabou");
-    };
+    }
 
     const onDragEnter = (e: any) => {
-        setDraggedPos(index);
-        setExpandWidth(e.target.offsetHeight + 10);
-    };
 
-    const onDragExit = (e: any) => {
-        setExpandWidth(0);
-        // console.log("saiu: ", e.target);
-        // e.target.style.paddingBottom = 0;
-    };
+        // For I.E
+        e.preventDefault();
+        setDraggedPos(index);
+        // @ts-ignore
+        const elemHeight = itemRef && itemRef.current ? itemRef.current.offsetHeight : 0;
+        setExpandHeight(elemHeight);
+        if (elementRef.current !== e.target) {
+            setCounter(f => ++f);
+        }
+
+    }
+
+    const onDragExit = async (e: any) => {
+        if (elementRef.current === e.target && counter === 0) {
+            setExpandHeight(0);
+        }
+        if (elementRef.current !== e.target) {
+            setCounter(f => --f);
+        }
+    }
+
+    useEffect(() => {
+        setExpandHeight(0);
+        setDeactivateTransition(true);
+        setTimeout(() => {
+            setDeactivateTransition(false);
+        }, transitionTime)
+    }, [boards]);
 
     return (
-        <StyledBoardCard expandWidth={expandWidth}>
+        <StyledBoardCard
+            ref={elementRef}
+            expandHeight={expandHeight}
+            deactivateTransition={deactivateTransition}
+            transitionTime={transitionTime}
+            onDragEnter={onDragEnter}
+            onDragLeave={onDragExit}>
             <div
+                ref={itemRef}
                 className="card-container"
                 draggable="true"
                 onDragEnd={onDragEnd}
-                onDragStart={onDragStart}
-                onDragEnter={onDragEnter}
-                onDragLeave={onDragExit}>
-                {text}
+                onDragStart={onDragStart}>
+                {children}
             </div>
         </StyledBoardCard>
     )

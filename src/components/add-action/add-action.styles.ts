@@ -11,5 +11,6 @@ export const StyledAddAction = styled.button`
         width: 100%;
         text-align: start;
         outline: none;
+        white-space: nowrap;
     `}
 `;

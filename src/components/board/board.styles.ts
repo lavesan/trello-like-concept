@@ -4,7 +4,6 @@ export const StyledBoard = styled.div`
     ${({ theme }) => css`
         border-radius: 5px;
         height: 100%;
-        width: 300px;
 
         .title-container {
             background-color: ${theme.gray.secondary};
@@ -23,6 +22,7 @@ export const StyledBoard = styled.div`
             list-style-type:none;
             margin: 0;
             padding: 20px 0;
+            height: 80%;
 
             > * {
                 padding-right: 10px;

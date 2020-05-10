@@ -6,5 +6,4 @@ export default createGlobalStyle`
         min-height: 100vh;
         min-width: 100vw;
     }
-
 `
