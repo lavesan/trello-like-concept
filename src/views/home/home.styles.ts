@@ -10,21 +10,10 @@ export const StyledHome = styled.div`
             padding-right: 20px;
         }
 
-        .filter-input-container {
-            display: flex;
-            flex-flow: row nowrap;
-            width: 60%;
-
-            > :first-child {
-                margin-right: 10px;
-            }
-        }
-
         .boards-section {
             overflow-x: scroll;
             display: flex;
             flex-flow: row nowrap;
-            padding-top: 20px;
             padding-bottom: 20px;
             height: 100%;
 

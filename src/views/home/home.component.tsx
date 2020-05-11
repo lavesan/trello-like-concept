@@ -4,7 +4,7 @@ import { StyledHome } from './home.styles';
 import { AppContext } from '../../App.context';
 import { BoardComponent } from '../../components/board';
 import { StyledAddAction } from '../../components/add-action';
-import { StyledSearchInput } from '../../components/search-input';
+import { FilterSectionComponent } from '../../components/filter-section';
 
 export default () => {
 
@@ -12,18 +12,7 @@ export default () => {
 
     return (
         <StyledHome>
-            <section>
-                <h1>Título do quadro</h1>
-                <div>
-                    <div className="filter-input-container">
-                        <StyledSearchInput placeholder="Pesquisar" />
-                        <button>FILTRO AVANÇADO</button>
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
-            </section>
+            <FilterSectionComponent />
             <section className="boards-section">
                 {boards.map(board => <BoardComponent key={board.id} {...board} />)}
                 <div>
