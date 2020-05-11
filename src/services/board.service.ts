@@ -21,8 +21,8 @@ class BoardService {
         return axios.post(`${process.env.REACT_APP_API_URL}boards`, board);
     }
 
-    updateBoard(board: IBoard) {
-        return axios.patch(`${process.env.REACT_APP_API_URL}boards`, board);
+    updateBoard({ id, ...body }: IBoard) {
+        return axios.patch(`${process.env.REACT_APP_API_URL}boards/${id}`, body);
     }
 
     deleteBoard(boardId: number) {
@@ -33,12 +33,12 @@ class BoardService {
         return axios.get(`${process.env.REACT_APP_API_URL}cards${objectToQueryString(query)}`);
     }
 
-    createCard(card: ICard) {
+    createCard(card: Partial<ICard>) {
         return axios.post(`${process.env.REACT_APP_API_URL}cards`, card);
     }
 
-    updateCard(card: ICard) {
-        return axios.patch(`${process.env.REACT_APP_API_URL}cards`, card);
+    updateCard({ id, ...body }: ICard) {
+        return axios.patch(`${process.env.REACT_APP_API_URL}cards/${id}`, body);
     }
 
     deleteCard(cardId: number) {

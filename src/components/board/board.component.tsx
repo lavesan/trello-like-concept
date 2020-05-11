@@ -1,15 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { StyledBoard } from './board.styles';
 import { BoardCardComponent } from '../board-card';
 import { CardComponent } from '../card';
 import { StyledAddAction } from '../add-action';
 import { AppContext } from '../../App.context';
-import { IBoardComponent } from './board.interfaces';
+import { IBoardComponent, INewTask } from './board.interfaces';
 
 export default ({ cards, id, name }: IBoardComponent) => {
 
     const { setBoards, boards, draggedElem, draggedPos, setDraggedPos } = useContext(AppContext);
+    const [showNewCard, setShowNewCard] = useState<boolean>(false);
 
     const onDrop = (e: any) => {
 
@@ -48,6 +49,10 @@ export default ({ cards, id, name }: IBoardComponent) => {
         e.preventDefault();
     }
 
+    const createNewTask = () => {
+        setShowNewCard(true);
+    }
+
     return (
         <StyledBoard>
             <header className="title-container">
@@ -55,8 +60,21 @@ export default ({ cards, id, name }: IBoardComponent) => {
             </header>
             <ul className="cards-list" onDrop={onDrop} onDragOver={onDragOver}>
                 {cards.map((card, index) => <CardComponent key={card.id} {...card} index={index} />)}
+                {showNewCard &&
+                    <CardComponent
+                        boardId={id}
+                        userIds={[]}
+                        tagsIds={[]}
+                        tags={[]}
+                        users={[]}
+                        id={0}
+                        title={''}
+                        position={cards.length}
+                        index={cards.length}
+                        setShow={setShowNewCard} />
+                }
                 <BoardCardComponent index={cards.length}>
-                    <StyledAddAction>+ TASK</StyledAddAction>
+                    <StyledAddAction onClick={createNewTask}>+ TASK</StyledAddAction>
                 </BoardCardComponent>
             </ul>
         </StyledBoard>

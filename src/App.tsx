@@ -26,34 +26,28 @@ function App() {
 
       const boardsRes = await boardService.getBoards()
         .catch(() => {
-          return [];
+          return { data: [] };
         });
       const cardsRes = await boardService.getCards()
         .catch(() => {
-          return [];
+          return { data: [] };
         });
       const tagsRes = await boardService.getTags()
         .catch(() => {
-          return [];
+          return { data: [] };
         });
       const usersRes = await boardService.getUsers()
         .catch(() => {
-          return [];
+          return { data: [] };
         });
 
-      // @ts-ignore
       setTags(tagsRes.data);
-      // @ts-ignore
       setUsers(usersRes.data);
 
       const mappedBoards = mapDataIntoBoards({
-        // @ts-ignore
         boards: boardsRes.data,
-        // @ts-ignore
         cards: cardsRes.data,
-        // @ts-ignore
         users: usersRes.data,
-        // @ts-ignore
         tags: tagsRes.data,
       });
 

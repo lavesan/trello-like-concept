@@ -8,10 +8,10 @@ import { StyledSearchInput } from '../search-input';
 import { SlideDownComponent } from '../slide-down';
 import { StyledTagButton } from '../tag-button';
 import { CircleImgComponent } from '../circle-img';
-import emptyUser from '../../assets/imgs/empty-user.jpg';
 import { AppContext } from '../../App.context';
 import { ISearchCard } from '../../services/board.interfaces';
 import { mapDataIntoBoards } from '../../helpers/boards.helpers';
+import emptyUser from '../../assets/imgs/empty-user.jpg';
 
 export default ({}: IFilterSectionComponent) => {
 

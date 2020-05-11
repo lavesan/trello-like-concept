@@ -5,3 +5,7 @@ export interface ICardComponent extends ICard {
     tags: ITag[];
     users: IUser[];
 }
+
+export interface IShowTask {
+    setShow?: (param: boolean) => void;
+}
