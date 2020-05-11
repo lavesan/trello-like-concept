@@ -1,0 +1,74 @@
+{
+    "boards": [
+        {
+            "id": 1,
+            "name": "A fazer",
+            "position": 1
+        },
+        {
+            "id": 2,
+            "name": "Fazendo",
+            "position": 2
+        },
+        {
+            "id": 3,
+            "name": "Feito",
+            "position": 3
+        }
+    ],
+    "cards": [
+        {
+            "id": 1,
+            "title": "Analisar meu projeto",
+            "boardId": 3,
+            "userIds": [2],
+            "position": 1
+        },
+        {
+            "id": 2,
+            "title": "Jogar Dark Souls",
+            "boardId": 1,
+            "tagsIds": [2],
+            "userIds": [1],
+            "position": 1
+        },
+        {
+            "id": 3,
+            "title": "Teste Facilit",
+            "boardId": 3,
+            "tagsIds": [1, 2],
+            "userIds": [1],
+            "position": 2
+        },
+        {
+            "id": 4,
+            "title": "Praticando testes unitários",
+            "boardId": 2,
+            "tagsIds": [1],
+            "userIds": [1],
+            "position": 1
+        }
+    ],
+    "tags": [
+        {
+            "id": 1,
+            "name": "Programação"
+        },
+        {
+            "id": 2,
+            "name": "Diversão"
+        }
+    ],
+    "users": [
+        {
+            "id": 1,
+            "name": "Valdery Alves",
+            "imgUrl": ""
+        },
+        {
+            "id": 2,
+            "name": "Facilit",
+            "imgUrl": ""
+        }
+    ]
+}
