@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown } from 'semantic-ui-react';
@@ -10,11 +10,14 @@ import { StyledAddAction } from '../add-action';
 import { AppContext } from '../../App.context';
 import { IBoardComponent } from './board.interfaces';
 import { StyledInvisibleInput } from '../invisible-input';
+import { IShowTask } from '../card/card.interfaces';
+import { ICard } from '../../models/models.interfaces';
 
-export default ({ cards, id, name, position }: IBoardComponent) => {
+export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowTask) => {
 
     const { setBoards, boards, draggedElem, draggedPos, setDraggedPos, boardService, reloadBoards } = useContext(AppContext);
     const boardInputRef = useRef<HTMLInputElement>(null);
+    const [boardRef, setBoardRef] = useState<HTMLDivElement | null>(null);
     const [showNewCard, setShowNewCard] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>(name);
 
@@ -25,6 +28,7 @@ export default ({ cards, id, name, position }: IBoardComponent) => {
         }
 
         const boardsCopy: IBoardComponent[] = [];
+        let filteredCardsToUpdate: ICard[] = [];
 
         Object.assign(boardsCopy, boards);
 
@@ -38,6 +42,7 @@ export default ({ cards, id, name, position }: IBoardComponent) => {
                 const rightSide = filteredCards.slice(draggedPos);
                 leftSide.push(draggedElem);
                 filteredCards = leftSide.concat(rightSide);
+                filteredCardsToUpdate = filteredCards;
 
             }
 
@@ -46,16 +51,16 @@ export default ({ cards, id, name, position }: IBoardComponent) => {
         }
 
         setBoards(boardsCopy);
-        
-        boardService.updateCard({
-            ...draggedElem,
-            position: draggedPos,
-            boardId: id,
-        })
-            .then(() => {
-                reloadBoards();
-            })
 
+        for (let i = 0; i < filteredCardsToUpdate.length; i++) {
+            await boardService.updateCard({
+                ...filteredCardsToUpdate[i],
+                position: i,
+                boardId: id,
+            });
+        }
+
+        reloadBoards();
 
         setDraggedPos(0);
 
@@ -81,7 +86,20 @@ export default ({ cards, id, name, position }: IBoardComponent) => {
             await boardService.deleteCard(card.id);
         }
         boardService.deleteBoard(id)
-            .then(() => {
+            .then(async () => {
+
+                let lastPosition = -1;
+                for (const board of boards) {
+
+                    if (board.id !== id) {
+                        lastPosition++;
+                        await boardService.updateBoard({
+                            ...board,
+                            position: lastPosition,
+                        })
+                    }
+
+                }
                 reloadBoards();
             });
 
@@ -90,17 +108,28 @@ export default ({ cards, id, name, position }: IBoardComponent) => {
     const changeName = (e: any) => {
 
         e.preventDefault();
-        boardService.updateBoard({
-            id,
-            position,
-            name: newName,
-        })
-            .then(() => {
-                if (boardInputRef.current) {
-                    boardInputRef.current.blur();
-                }
-                reloadBoards();
+        if (id) {
+            boardService.updateBoard({
+                id,
+                position,
+                name: newName,
             })
+                .then(() => {
+                    if (boardInputRef.current) {
+                        boardInputRef.current.blur();
+                    }
+                    reloadBoards();
+                });
+        } else {
+            boardService.createBoard({
+                position,
+                name: newName,
+            })
+                .then(() => {
+                    setNewName('');
+                    reloadBoards();
+                });
+        }
 
     }
 
@@ -109,11 +138,31 @@ export default ({ cards, id, name, position }: IBoardComponent) => {
     }
 
     const onNewNameBlur = (e: any) => {
+        
+        if (!id && setShow) {
+            setShow(false);
+        }
         setNewName(name);
+
     }
 
+    const getBoardRef = useCallback(
+        (node) => {
+            setBoardRef(node)
+        },
+        [setBoardRef]
+    )
+
+    useEffect(() => {
+        if (!id && boardRef) {
+            if (boardInputRef.current) {
+                boardInputRef.current.focus();
+            }
+        }
+    }, [boardRef])
+
     return (
-        <StyledBoard>
+        <StyledBoard ref={getBoardRef}>
             <header>
                 <form className="title-container" onSubmit={changeName}>
                     <StyledInvisibleInput

@@ -17,7 +17,7 @@ class BoardService {
         return axios.get(`${process.env.REACT_APP_API_URL}boards`);
     }
 
-    createBoard(board: IBoard) {
+    createBoard(board: Partial<IBoard>) {
         return axios.post(`${process.env.REACT_APP_API_URL}boards`, board);
     }
 

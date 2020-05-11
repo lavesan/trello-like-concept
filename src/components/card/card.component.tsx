@@ -1,4 +1,7 @@
 import React, { useState, useContext, useCallback, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { Dropdown } from 'semantic-ui-react';
 
 import { BoardCardComponent } from '../board-card';
 import { StyledCardComponent } from './card.styles';
@@ -11,7 +14,7 @@ import { AppContext } from '../../App.context';
 
 export default (props: ICardComponent & IShowTask) => {
 
-    const { boardService, setBoards, reloadBoards } = useContext(AppContext);
+    const { boardService, reloadBoards, boards } = useContext(AppContext);
     const [newTitle, setNewTitle] = useState<string>(props.title);
     const [titleInputRef, setTitleInputRef] = useState<HTMLInputElement | null>(null);
 
@@ -56,6 +59,34 @@ export default (props: ICardComponent & IShowTask) => {
 
     }
 
+    const removeCard = () => {
+
+        const board = boards.find(boar => boar.id === props.boardId);
+
+        boardService.deleteCard(props.id)
+            .then(async () => {
+
+                if (board) {
+
+                    let lastPosition = -1;
+                    for (const card of board.cards) {
+    
+                        if (card.id !== props.id) {
+                            lastPosition++;
+                            await boardService.updateCard({
+                                ...card,
+                                position: lastPosition,
+                            })
+                        }
+    
+                    }
+
+                }
+                reloadBoards();
+            });
+
+    }
+
     const getInputRef = useCallback(
         (node) => {
             setTitleInputRef(node);
@@ -72,11 +103,18 @@ export default (props: ICardComponent & IShowTask) => {
     return (
         <BoardCardComponent data={props} index={props.index}>
             <StyledCardComponent onSubmit={onSubmit}>
-                <StyledInvisibleInput
-                    ref={getInputRef}
-                    value={newTitle}
-                    onChange={onChange}
-                    onBlur={onBlur} />
+                <div className="card-info-container">
+                    <StyledInvisibleInput
+                        ref={getInputRef}
+                        value={newTitle}
+                        onChange={onChange}
+                        onBlur={onBlur} />
+                    <Dropdown className="card-info-container--dropdown" icon={<FontAwesomeIcon icon={faEllipsisV} />}>
+                        <Dropdown.Menu>
+                            <Dropdown.Item text='Excluir' onClick={removeCard} />
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
                 <footer className="card-aditionals">
                     <div className="card-aditionals--tags">
                         {props.tags.map(tag => <StyledTagButton>{tag.name}</StyledTagButton>)}
