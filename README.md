@@ -20,3 +20,7 @@ Para iniciar este projeto você precisará ter previamente as seguintes configur
 ## Testes
 
 Para executar os testes da aplicações, utilize o comando `npm run test`
+
+## Drag and drop no mobile
+
+Atualmente não existe drag and drop no mobile, pois há limitações da tecnologia e não foi especificado no teste que era necessário
