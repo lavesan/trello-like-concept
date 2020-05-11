@@ -1,55 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import { HomePage } from './views/home';
 import { IBoard, ICard } from './views/home/home.interfaces';
 import { AppContext } from './App.context';
+import BoardService from './services/board.service';
 import theme from './App.theme';
 import GlobalStyle from './global-styles';
 
 function App() {
 
-  const [draggedElem, setDraggedElem] = useState<ICard>({
-    id: -1,
-    text: '',
-  });
+  const [draggedElem, setDraggedElem] = useState<ICard | null>(null);
   const [draggedPos, setDraggedPos] = useState<number>(0);
-  const [boards, setBoards] = useState<IBoard[]>([
-    {
-      id: 1,
-      name: 'Quadro 1',
-      cards: [
-        {
-          id: 1,
-          text: 'Isso aqui escrito',
-        },
-        {
-          id: 2,
-          text: 'Agora tem isso aque',
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Quadro 1',
-      cards: [
-        {
-          id: 3,
-          text: 'Algo aqui',
-        },
-      ],
-    },
-  ]);
+  const [boards, setBoards] = useState<IBoard[]>([]);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setBoards([]);
-  //   }, 5000);
-  // }, []);
+  const boardService = BoardService.getInstance();
+
+  const loadData = useCallback(
+    async () => {
+
+      const boardsRes = await boardService.getBoards()
+        .catch(() => {
+          return [];
+        });
+      const cardsRes = await boardService.getCards()
+        .catch(() => {
+          return [];
+        });
+      const tagsRes = await boardService.getTags()
+        .catch(() => {
+          return [];
+        });
+      const usersRes = await boardService.getUsers()
+        .catch(() => {
+          return [];
+        });
+
+        // @ts-ignore
+        const mappedBoards = boardsRes.data.map(board => {
+          
+          // @ts-ignore
+          const cards = cardsRes.data.filter(card => card.boardId === board.id);
+
+          const mappedCards = cards.map((card: ICard) => {
+            
+            // @ts-ignore
+            const usersOnCard = usersRes.data.filter(user => card.userIds.includes(user.id));
+            // @ts-ignore
+            const tagsOnCard = tagsRes.data.filter(tag => card.boardId === tag.id);
+
+            return {
+              ...card,
+              users: usersOnCard,
+              tags: tagsOnCard,
+            }
+
+          });
+
+          return {
+            ...board,
+            cards: mappedCards,
+          }
+
+      })
+
+      setBoards(mappedBoards);
+
+    },
+    [boardService]
+  )
 
   useEffect(() => {
-    console.log('boards: ', boards);
-  }, [boards])
+    loadData();
+  }, [loadData])
 
   return (
     <AppContext.Provider
@@ -61,6 +84,7 @@ function App() {
           setDraggedPos,
           boards,
           setBoards,
+          boardService,
         }
       }>
         <ThemeProvider theme={theme}>
