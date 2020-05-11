@@ -13,6 +13,10 @@ export default ({ cards, id, name }: IBoard) => {
 
     const onDrop = (e: any) => {
 
+        if (!draggedElem) {
+            return;
+        }
+
         const baordsCopy: IBoard[] = [];
 
         Object.assign(baordsCopy, boards);

@@ -9,7 +9,7 @@ export default ({ index, ...data }: ICardComponent) => {
     return (
         <BoardCardComponent data={data} index={index}>
             <StyledCardComponent>
-                {data.text}
+                {data.title}
             </StyledCardComponent>
         </BoardCardComponent>
     )
