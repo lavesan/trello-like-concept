@@ -17,4 +17,5 @@ export const AppContext = React.createContext({
     setTags: (param: ITag[]) => {},
     users: [] as IUser[],
     setUsers: (param: IUser[]) => {},
+    reloadBoards: () => {},
 });
