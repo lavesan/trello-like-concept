@@ -9,9 +9,11 @@ import { CardComponent } from '../card';
 import { StyledAddAction } from '../add-action';
 import { AppContext } from '../../App.context';
 import { IBoardComponent } from './board.interfaces';
+import { ICardComponent } from '../card/card.interfaces';
 import { StyledInvisibleInput } from '../invisible-input';
 import { IShowTask } from '../card/card.interfaces';
 import { ICard } from '../../models/models.interfaces';
+import { instanceOfCardComponent } from '../../helpers/app.helpers';
 
 export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowTask) => {
 
@@ -23,7 +25,7 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
 
     const onDrop = async (e: any) => {
 
-        if (!draggedElem) {
+        if (!draggedElem || !instanceOfCardComponent(draggedElem)) {
             return;
         }
 

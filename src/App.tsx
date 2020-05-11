@@ -14,7 +14,7 @@ import { mapDataIntoBoards } from './helpers/boards.helpers';
 
 function App() {
 
-  const [draggedElem, setDraggedElem] = useState<ICardComponent | null>(null);
+  const [draggedElem, setDraggedElem] = useState<ICardComponent | IBoardComponent | null>(null);
   const [draggedPos, setDraggedPos] = useState<number>(0);
   const [boards, setBoards] = useState<IBoardComponent[]>([]);
   const [users, setUsers] = useState<IUser[]>([]);

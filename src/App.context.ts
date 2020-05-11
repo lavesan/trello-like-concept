@@ -6,8 +6,8 @@ import { IBoardComponent } from './components/board/board.interfaces';
 import { ITag, IUser } from './models/models.interfaces';
 
 export const AppContext = React.createContext({
-    draggedElem: {} as ICardComponent | null,
-    setDraggedElem: (param: ICardComponent) => {},
+    draggedElem: {} as ICardComponent | IBoardComponent | null,
+    setDraggedElem: (param: ICardComponent | IBoardComponent) => {},
     draggedPos: 0,
     setDraggedPos: (param: number) => {},
     boards: [] as IBoardComponent[],

@@ -1,3 +1,6 @@
+import { ICardComponent } from "../components/card/card.interfaces";
+import { IBoardComponent } from "../components/board/board.interfaces";
+
 export const objectToQueryString = (object: object) => {
     
     let queryString = '';
@@ -9,4 +12,12 @@ export const objectToQueryString = (object: object) => {
     });
     return queryString;
 
+}
+
+export const instanceOfCardComponent = (object: any): object is ICardComponent => {
+    return 'users' in object;
+}
+
+export const instanceOfBoardComponent = (object: any): object is IBoardComponent => {
+    return 'cards' in object;
 }
