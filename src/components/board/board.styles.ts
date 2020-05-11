@@ -6,12 +6,14 @@ export const StyledBoard = styled.div`
         height: 100%;
 
         .title-container {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            align-items: center;
             background-color: ${theme.gray.secondary};
             padding: 15px 10px;
 
             .title-container--name-input {
-                background: none;
-                border: thin solid transparent;
                 text-transform: uppercase;
             }
         }

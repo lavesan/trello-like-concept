@@ -11,7 +11,7 @@ import { AppContext } from '../../App.context';
 
 export default (props: ICardComponent & IShowTask) => {
 
-    const { boardService, setBoards } = useContext(AppContext);
+    const { boardService, setBoards, reloadBoards } = useContext(AppContext);
     const [newTitle, setNewTitle] = useState<string>(props.title);
     const [titleInputRef, setTitleInputRef] = useState<HTMLInputElement | null>(null);
 
@@ -37,7 +37,7 @@ export default (props: ICardComponent & IShowTask) => {
                 title: newTitle,
             })
                 .then(res => {
-                    // TODO: Alterar este card do board com o novo valor
+                    reloadBoards();
                 });
         } else {
 
@@ -49,7 +49,8 @@ export default (props: ICardComponent & IShowTask) => {
                 userIds: [],
             })
                 .then(res => {
-                    // TODO: Dar um refresh nos cards com este novo cartão
+                    setNewTitle('');
+                    reloadBoards();
                 });
         }
 
