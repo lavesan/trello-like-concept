@@ -98,7 +98,7 @@ export default (props: ICardComponent & IShowTask) => {
         if (!props.id && titleInputRef) {
             titleInputRef.focus();
         }
-    }, [titleInputRef])
+    }, [titleInputRef, props.id])
 
     return (
         <BoardCardComponent data={props} index={props.index}>
@@ -115,14 +115,14 @@ export default (props: ICardComponent & IShowTask) => {
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
-                <footer className="card-aditionals">
+                <div className="card-aditionals">
                     <div className="card-aditionals--tags">
                         {props.tags.map(tag => <StyledTagButton>{tag.name}</StyledTagButton>)}
                     </div>
                     <div className="card-aditionals--tags">
                         {props.users.map(user => <CircleImgComponent imgUrl={user.imgUrl || emptyUser} />)}
                     </div>
-                </footer>
+                </div>
             </StyledCardComponent>
         </BoardCardComponent>
     )

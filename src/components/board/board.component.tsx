@@ -159,7 +159,7 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
                 boardInputRef.current.focus();
             }
         }
-    }, [boardRef])
+    }, [boardRef, id])
 
     return (
         <StyledBoard ref={getBoardRef}>

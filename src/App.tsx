@@ -22,27 +22,30 @@ function App() {
 
   const boardService = BoardService.getInstance();
 
-  const reloadBoards = async () => {
+  const reloadBoards = useCallback(
+    async () => {
 
-    const boardsRes = await boardService.getBoards()
-      .catch(() => {
-        return { data: [] };
+      const boardsRes = await boardService.getBoards()
+        .catch(() => {
+          return { data: [] };
+        });
+      const cardsRes = await boardService.getCards()
+        .catch(() => {
+          return { data: [] };
+        });
+        
+      const mappedBoards = mapDataIntoBoards({
+        tags,
+        users,
+        boards: boardsRes.data,
+        cards: cardsRes.data,
       });
-    const cardsRes = await boardService.getCards()
-      .catch(() => {
-        return { data: [] };
-      });
-      
-    const mappedBoards = mapDataIntoBoards({
-      tags,
-      users,
-      boards: boardsRes.data,
-      cards: cardsRes.data,
-    });
 
-    setBoards(mappedBoards);
+      setBoards(mappedBoards);
 
-  }
+    },
+    [tags, users, boardService]
+  )
 
   const loadData = useCallback(
     async () => {
@@ -56,14 +59,16 @@ function App() {
           return { data: [] };
         });
 
-      await setTags(tagsRes.data);
-      await setUsers(usersRes.data);
-
-      reloadBoards();
+      setTags(tagsRes.data);
+      setUsers(usersRes.data);
 
     },
     [boardService]
   )
+
+  useEffect(() => {
+    reloadBoards();
+  }, [reloadBoards])
 
   useEffect(() => {
     loadData();

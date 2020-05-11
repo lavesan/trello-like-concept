@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
-import { IFilterSectionComponent } from './filter-section.interfaces';
 import { StyledFilterSection } from './filter-section.styles';
 import { StyledSearchInput } from '../search-input';
 import { SlideDownComponent } from '../slide-down';
@@ -13,7 +12,7 @@ import { ISearchCard } from '../../services/board.interfaces';
 import { mapDataIntoBoards } from '../../helpers/boards.helpers';
 import emptyUser from '../../assets/imgs/empty-user.jpg';
 
-export default ({}: IFilterSectionComponent) => {
+export default () => {
 
     const { tags, users, boardService, setBoards, boards } = useContext(AppContext);
     const [showAdvanced, setShowAdvanced] = useState<boolean>(false);

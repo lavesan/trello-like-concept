@@ -38,7 +38,7 @@ export const mapDataIntoBoards = ({ boards, tags, users, cards }: IMapIntoBoards
 
     return {
       ...board,
-      cards: mappedCards,
+      cards: sortedCards,
     }
 
   })
