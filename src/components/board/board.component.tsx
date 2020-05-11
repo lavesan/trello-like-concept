@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 
-import { IBoard } from '../../views/home/home.interfaces';
 import { StyledBoard } from './board.styles';
 import { BoardCardComponent } from '../board-card';
 import { CardComponent } from '../card';
 import { StyledAddAction } from '../add-action';
 import { AppContext } from '../../App.context';
+import { IBoardComponent } from './board.interfaces';
 
-export default ({ cards, id, name }: IBoard) => {
+export default ({ cards, id, name }: IBoardComponent) => {
 
     const { setBoards, boards, draggedElem, draggedPos, setDraggedPos } = useContext(AppContext);
 
@@ -17,7 +17,7 @@ export default ({ cards, id, name }: IBoard) => {
             return;
         }
 
-        const baordsCopy: IBoard[] = [];
+        const baordsCopy: IBoardComponent[] = [];
 
         Object.assign(baordsCopy, boards);
 
@@ -54,7 +54,7 @@ export default ({ cards, id, name }: IBoard) => {
                 <input className="title-container--name-input" value={name} />
             </header>
             <ul className="cards-list" onDrop={onDrop} onDragOver={onDragOver}>
-                {cards.map((card, index) => <CardComponent key={card.id} index={index} {...card} />)}
+                {cards.map((card, index) => <CardComponent key={card.id} {...card} index={index} />)}
                 <BoardCardComponent index={cards.length}>
                     <StyledAddAction>+ TASK</StyledAddAction>
                 </BoardCardComponent>

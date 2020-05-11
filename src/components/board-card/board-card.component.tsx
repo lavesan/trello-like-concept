@@ -1,10 +1,10 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 
-import { ICardComponent } from './board-card.interfaces';
+import { IBoardCardComponent } from './board-card.interfaces';
 import { StyledBoardCard } from './board-card.styles';
 import { AppContext } from '../../App.context';
 
-export default ({ index, children, data }: ICardComponent) => {
+export default ({ index, children, data }: IBoardCardComponent) => {
 
     const { setDraggedElem, setDraggedPos, boards } = useContext(AppContext);
     const [expandHeight, setExpandHeight] = useState<number>(0);

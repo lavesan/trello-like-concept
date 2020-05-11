@@ -1,17 +1,19 @@
-import axios from 'axios';
-import { ICard, IBoard, ITag, IUser } from '../views/home/home.interfaces';
+import axios, { AxiosResponse } from 'axios';
+import { ICard, IBoard, ITag, IUser } from '../models/models.interfaces';
+import { objectToQueryString } from '../helpers/app.helpers';
+import { ISearchCard } from './board.interfaces';
 
 class BoardService {
 
-    getUsers(): Promise<IUser[]> {
+    getUsers(): Promise<AxiosResponse<IUser[]>> {
         return axios.get(`${process.env.REACT_APP_API_URL}users`);
     }
 
-    getTags(): Promise<ITag[]> {
+    getTags(): Promise<AxiosResponse<ITag[]>> {
         return axios.get(`${process.env.REACT_APP_API_URL}tags`);
     }
 
-    getBoards(): Promise<IBoard[]> {
+    getBoards(): Promise<AxiosResponse<IBoard[]>> {
         return axios.get(`${process.env.REACT_APP_API_URL}boards`);
     }
 
@@ -27,8 +29,8 @@ class BoardService {
         return axios.delete(`${process.env.REACT_APP_API_URL}boards/${boardId}`);
     }
 
-    getCards(): Promise<ICard[]> {
-        return axios.get(`${process.env.REACT_APP_API_URL}cards`);
+    getCards(query: ISearchCard = {} as ISearchCard): Promise<AxiosResponse<ICard[]>> {
+        return axios.get(`${process.env.REACT_APP_API_URL}cards${objectToQueryString(query)}`);
     }
 
     createCard(card: ICard) {

@@ -3,13 +3,13 @@ export interface ICard {
     title: string;
     boardId: number;
     userIds: number[];
+    tagsIds: number[];
     position: number;
 }
 
 export interface IBoard {
     id: number;
     name: string;
-    cards: ICard[];
     position: number;
 }
 

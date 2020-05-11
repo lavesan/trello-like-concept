@@ -2,17 +2,22 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import { HomePage } from './views/home';
-import { IBoard, ICard } from './views/home/home.interfaces';
+import { ICard, ITag, IUser } from './models/models.interfaces';
 import { AppContext } from './App.context';
 import BoardService from './services/board.service';
 import theme from './App.theme';
 import GlobalStyle from './global-styles';
+import { ICardComponent } from './components/card/card.interfaces';
+import { IBoardComponent } from './components/board/board.interfaces';
+import { mapDataIntoBoards } from './helpers/boards.helpers';
 
 function App() {
 
-  const [draggedElem, setDraggedElem] = useState<ICard | null>(null);
+  const [draggedElem, setDraggedElem] = useState<ICardComponent | null>(null);
   const [draggedPos, setDraggedPos] = useState<number>(0);
-  const [boards, setBoards] = useState<IBoard[]>([]);
+  const [boards, setBoards] = useState<IBoardComponent[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [tags, setTags] = useState<ITag[]>([]);
 
   const boardService = BoardService.getInstance();
 
@@ -36,33 +41,21 @@ function App() {
           return [];
         });
 
+      // @ts-ignore
+      setTags(tagsRes.data);
+      // @ts-ignore
+      setUsers(usersRes.data);
+
+      const mappedBoards = mapDataIntoBoards({
         // @ts-ignore
-        const mappedBoards = boardsRes.data.map(board => {
-          
-          // @ts-ignore
-          const cards = cardsRes.data.filter(card => card.boardId === board.id);
-
-          const mappedCards = cards.map((card: ICard) => {
-            
-            // @ts-ignore
-            const usersOnCard = usersRes.data.filter(user => card.userIds.includes(user.id));
-            // @ts-ignore
-            const tagsOnCard = tagsRes.data.filter(tag => card.boardId === tag.id);
-
-            return {
-              ...card,
-              users: usersOnCard,
-              tags: tagsOnCard,
-            }
-
-          });
-
-          return {
-            ...board,
-            cards: mappedCards,
-          }
-
-      })
+        boards: boardsRes.data,
+        // @ts-ignore
+        cards: cardsRes.data,
+        // @ts-ignore
+        users: usersRes.data,
+        // @ts-ignore
+        tags: tagsRes.data,
+      });
 
       setBoards(mappedBoards);
 
@@ -85,6 +78,10 @@ function App() {
           boards,
           setBoards,
           boardService,
+          users,
+          setUsers,
+          tags,
+          setTags,
         }
       }>
         <ThemeProvider theme={theme}>

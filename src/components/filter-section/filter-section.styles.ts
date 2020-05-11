@@ -48,20 +48,15 @@ export const StyledFilterSection = styled.section`
                     align-items: center;
 
                     .advanced-filters-container--users--image {
-                        border-radius: 50%;
-                        width: 25px;
-                        height: 25px;
-                        overflow: hidden;
                         margin-right: 10px;
-
-                        img {
-                            width: inherit;
-                            height: inherit;
-                        }
                     }
 
                     .advanced-filters-container--users--name {
                         margin: 0;
+
+                        &.selected-text {
+                            color: ${theme.blue.primary};
+                        }
                     }
                 }
 
@@ -81,12 +76,8 @@ export const StyledFilterSection = styled.section`
                 display: flex;
                 flex-flow: row nowrap;
 
-                .advanced-filters-container--tags-container--tag {
-                    background-color: ${theme.gray.terciary};
-                    outline: none;
-                    cursor: pointer;
-                    border: none;
-                    padding: 5px 10px;
+                > :not(:last-child) {
+                    margin-right: 10px;
                 }
             }
         }

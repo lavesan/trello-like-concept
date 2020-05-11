@@ -1,9 +1,9 @@
-import { ICard } from '../../views/home/home.interfaces';
+import { ICardComponent } from '../card/card.interfaces';
 
-export interface ICardComponent {
+export interface IBoardCardComponent {
     index: number;
     children?: any;
-    data?: ICard;
+    data?: ICardComponent;
 }
 
 export interface IStyledBoard {

@@ -21,6 +21,7 @@
             "id": 1,
             "title": "Analisar meu projeto",
             "boardId": 3,
+            "tagsIds": [],
             "userIds": [2],
             "position": 1
         },

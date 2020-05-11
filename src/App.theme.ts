@@ -7,4 +7,7 @@ export default {
     white: {
         primary: '#fff',
     },
+    blue: {
+        primary: 'blue',
+    },
 }
