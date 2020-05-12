@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from 'styled-components';
-import 'semantic-ui/dist/semantic.min.css';
+import 'semantic-ui-css/semantic.min.css';
 
 import { HomePage } from './views/home';
 import { ITag, IUser } from './models/models.interfaces';
