@@ -3,64 +3,46 @@ import { ThemeProvider } from 'styled-components';
 import 'semantic-ui-css/semantic.min.css';
 
 import { HomePage } from './views/home';
-import { ITag, IUser } from './models/models.interfaces';
 import { AppContext } from './App.context';
 import BoardService from './services/board.service';
 import theme from './App.theme';
 import GlobalStyle from './global-styles';
 import { ICardComponent } from './components/card/card.interfaces';
-import { IBoardComponent } from './components/board/board.interfaces';
 import { mapDataIntoBoards } from './helpers/boards.helpers';
+import { IBoard } from './models/models.interfaces';
 
 function App() {
 
-  const [draggedElem, setDraggedElem] = useState<ICardComponent | null>(null);
-  const [draggedPos, setDraggedPos] = useState<number>(0);
-  const [boards, setBoards] = useState<IBoardComponent[]>([]);
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [tags, setTags] = useState<ITag[]>([]);
+  const [draggedElem, setDraggedElem]   = useState<ICardComponent | null>(null);
+  const [draggedPos, setDraggedPos]     = useState<number>(0);
+  const [board, setBoard]                 = useState<IBoard>({
+    _id: '',
+    name: '',
+    tags: [],
+    users: [],
+    rows: [],
+  });
 
   const boardService = BoardService.getInstance();
 
   const reloadBoards = useCallback(
     async () => {
 
-      const boardsRes = await boardService.getBoards()
+      const boardsRes = await boardService.getBoard('5ed6fc8cda17dc4818761094')
         .catch(() => {
-          return { data: [] };
-        });
-      const cardsRes = await boardService.getCards()
-        .catch(() => {
-          return { data: [] };
+          return {
+            data: {
+              name: '',
+              tags: [],
+              users: [],
+              rows: [],
+            }
+          };
         });
         
-      const mappedBoards = mapDataIntoBoards({
-        tags,
-        users,
-        boards: boardsRes.data,
-        cards: cardsRes.data,
-      });
+      const mappedBoards = mapDataIntoBoards(boardsRes.data);
 
-      setBoards(mappedBoards);
-
-    },
-    [tags, users, boardService]
-  )
-
-  const loadData = useCallback(
-    async () => {
-
-      const tagsRes = await boardService.getTags()
-        .catch(() => {
-          return { data: [] };
-        });
-      const usersRes = await boardService.getUsers()
-        .catch(() => {
-          return { data: [] };
-        });
-
-      setTags(tagsRes.data);
-      setUsers(usersRes.data);
+      setBoard(mappedBoards);
 
     },
     [boardService]
@@ -70,10 +52,6 @@ function App() {
     reloadBoards();
   }, [reloadBoards])
 
-  useEffect(() => {
-    loadData();
-  }, [loadData])
-
   return (
     <AppContext.Provider
       value={
@@ -82,13 +60,9 @@ function App() {
           setDraggedElem,
           draggedPos,
           setDraggedPos,
-          boards,
-          setBoards,
+          board,
+          setBoard,
           boardService,
-          users,
-          setUsers,
-          tags,
-          setTags,
           reloadBoards,
         }
       }>

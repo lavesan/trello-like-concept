@@ -1,25 +1,31 @@
-export interface ICard {
-    id: number;
-    title: string;
-    boardId: number;
-    userIds: number[];
-    tagsIds: number[];
+// ICard
+export interface IColumn {
+    _id: string;
+    description: string;
+    users: IUser[];
+    tags: ITag[];
     position: number;
 }
 
 export interface IBoard {
-    id: number;
+    _id: string;
     name: string;
-    position: number;
+    rows: IRow[];
+    tags: ITag[];
+    users: IUser[];
 }
 
-export interface ITag {
-    id: number;
+// IBoard
+export interface IRow {
+    _id: string;
     name: string;
+    columns: IColumn[]
 }
+
+export type ITag  = string;
 
 export interface IUser {
-    id: number;
+    _id: string;
     name: string;
     imgUrl: string;
 }

@@ -1,7 +1,6 @@
-import { IMapIntoBoards } from './boards.interfaces';
-import { IBoardComponent } from '../components/board/board.interfaces';
+import { IBoard } from '../models/models.interfaces';
 
-export const mapDataIntoBoards = ({ boards, tags, users, cards }: IMapIntoBoards): IBoardComponent[] => {
+export const mapDataIntoBoards = (board: IBoard): IBoard => {
 
   const sortByPosition = (elem: any, nextElem: any) => {
 
@@ -15,34 +14,20 @@ export const mapDataIntoBoards = ({ boards, tags, users, cards }: IMapIntoBoards
 
   }
 
-  const mappedBoards = boards.map(board => {
+  const mappedBoards = board.rows.map(row => {
 
-    const filteredCards = cards.filter(card => card.boardId === board.id);
-
-    const mappedCards = filteredCards.map(card => {
-
-      const usersOnCard = users.filter(user => card.userIds.includes(user.id));
-      const tagsOnCard = tags.filter(tag => card.tagsIds.includes(tag.id));
-
-      return {
-        ...card,
-        index: 0,
-        users: usersOnCard,
-        tags: tagsOnCard,
-      }
-
-    });
-
-
-    const sortedCards = mappedCards.sort(sortByPosition);
+    const sortedColumns = row.columns.sort(sortByPosition);
 
     return {
-      ...board,
-      cards: sortedCards,
+      ...row,
+      columns: sortedColumns,
     }
 
   })
 
-  return mappedBoards.sort(sortByPosition);
+  return {
+    ...board,
+    rows: mappedBoards,
+  };
 
 }

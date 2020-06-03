@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components';
 
 export const StyledFilterSection = styled.section`
     ${({ theme }) => css`
+        margin-top: 20px;
+
         .filter-input-container {
             display: flex;
             flex-flow: row nowrap;

@@ -14,7 +14,7 @@ import emptyUser from '../../assets/imgs/empty-user.jpg';
 
 export default () => {
 
-    const { tags, users, boardService, setBoards, boards } = useContext(AppContext);
+    const { boardService, board, setBoard } = useContext(AppContext);
     const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
     const [filter, setFilter] = useState<ISearchCard>({
         q: '',
@@ -35,21 +35,16 @@ export default () => {
         boardService.getCards(filter)
             .then(res => {
 
-                const mappedBoards = mapDataIntoBoards({
-                    boards,
-                    tags,
-                    users,
-                    cards: res.data,
-                })
+                const mappedBoard = mapDataIntoBoards(board)
 
-                setBoards(mappedBoards);
+                setBoard(mappedBoard);
 
             });
     }, [filter])
 
     return (
         <StyledFilterSection>
-            <h1>Título do quadro</h1>
+            <h1>{board.name}</h1>
             <div>
                 <div className="filter-input-container">
                     <StyledSearchInput
@@ -70,17 +65,17 @@ export default () => {
                 <SlideDownComponent show={showAdvanced}>
                     <div className="advanced-filters-container">
                         <div className="advanced-filters-container--users">
-                            {users.map(user => (
+                            {board.users.map(user => (
                                 <button
                                     type="button"
                                     className="advanced-filters-container--users--user-tag"
-                                    onClick={() => setFilter(f => ({ ...f, userIds: user.id }))}>
+                                    onClick={() => setFilter(f => ({ ...f, userIds: user._id }))}>
                                     <CircleImgComponent
                                         className="advanced-filters-container--users--image"
-                                        selected={user.id === filter.userIds}
+                                        selected={user._id === filter.userIds}
                                         imgUrl={user.imgUrl ? user.imgUrl : emptyUser} />
                                     <p
-                                        className={`advanced-filters-container--users--name ${user.id === filter.userIds && 'selected-text'}`}
+                                        className={`advanced-filters-container--users--name ${user._id === filter.userIds && 'selected-text'}`}
                                         >
                                         {user.name}
                                     </p>
@@ -89,12 +84,12 @@ export default () => {
                         </div>
                         <div className="advanced-filters-container--divisor"></div>
                         <div className="advanced-filters-container--tags-container">
-                            {tags.map(tag => (
+                            {board.tags.map(tag => (
                                 <StyledTagButton
                                     type="button"
-                                    selected={tag.id === filter.tagsIds}
-                                    onClick={() => setFilter(f => ({ ...f, tagsIds: tag.id }))}>
-                                    {tag.name}
+                                    selected={tag === filter.tagsIds}
+                                    onClick={() => setFilter(f => ({ ...f, tagsIds: tag }))}>
+                                    {tag}
                                 </StyledTagButton>
                             ))}
                         </div>

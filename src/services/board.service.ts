@@ -1,48 +1,64 @@
 import axios, { AxiosResponse } from 'axios';
-import { ICard, IBoard, ITag, IUser } from '../models/models.interfaces';
+import { IColumn, IRow, ITag, IUser } from '../models/models.interfaces';
 import { objectToQueryString } from '../helpers/app.helpers';
 import { ISearchCard } from './board.interfaces';
 
 class BoardService {
 
-    getUsers(): Promise<AxiosResponse<IUser[]>> {
-        return axios.get(`${process.env.REACT_APP_API_URL}users`);
+    getBoards() {
+        return axios.get('board')
     }
 
-    getTags(): Promise<AxiosResponse<ITag[]>> {
-        return axios.get(`${process.env.REACT_APP_API_URL}tags`);
+    getBoard(boardId: string) {
+        return axios.get(`board/${boardId}`)
     }
 
-    getBoards(): Promise<AxiosResponse<IBoard[]>> {
-        return axios.get(`${process.env.REACT_APP_API_URL}boards`);
+    // getUsers(): Promise<AxiosResponse<IUser[]>> {
+    //     return axios.get(`users`);
+    // }
+
+    // getTags(): Promise<AxiosResponse<ITag[]>> {
+    //     return axios.get(`tags`);
+    // }
+
+    // getBoards(): Promise<AxiosResponse<IBoard[]>> {
+    //     return axios.get(`boards`);
+    // }
+
+    createBoard(board: any) {
+        return axios.post('board', board);
     }
 
-    createBoard(board: Partial<IBoard>) {
-        return axios.post(`${process.env.REACT_APP_API_URL}boards`, board);
+    updateBoard({ id, ...body }: any) {
+        return axios.patch('board', { boardId: id, ...body });
     }
 
-    updateBoard({ id, ...body }: IBoard) {
-        return axios.patch(`${process.env.REACT_APP_API_URL}boards/${id}`, body);
+    createRow(board: Partial<IRow>) {
+        return axios.post('board/row', board);
     }
 
-    deleteBoard(boardId: number) {
-        return axios.delete(`${process.env.REACT_APP_API_URL}boards/${boardId}`);
+    updateRow({ _id, ...body }: IRow) {
+        return axios.patch('board/row', { boardId: _id, ...body });
     }
 
-    getCards(query: ISearchCard = {} as ISearchCard): Promise<AxiosResponse<ICard[]>> {
-        return axios.get(`${process.env.REACT_APP_API_URL}cards${objectToQueryString(query)}`);
+    deleteRow(rowId: string) {
+        return axios.delete(`board/row/${rowId}`);
     }
 
-    createCard(card: Partial<ICard>) {
-        return axios.post(`${process.env.REACT_APP_API_URL}cards`, card);
+    getCards(query: ISearchCard = {} as ISearchCard): Promise<AxiosResponse<IColumn[]>> {
+        return axios.get(`cards${objectToQueryString(query)}`);
     }
 
-    updateCard({ id, ...body }: ICard) {
-        return axios.patch(`${process.env.REACT_APP_API_URL}cards/${id}`, body);
+    createCard(card: any) {
+        return axios.post(`board/column`, card);
     }
 
-    deleteCard(cardId: number) {
-        return axios.delete(`${process.env.REACT_APP_API_URL}cards/${cardId}`);
+    updateCard({ _id, ...body }: IColumn) {
+        return axios.patch('board/column', { boardId: _id, ...body });
+    }
+
+    deleteCard(cardId: string) {
+        return axios.delete(`cards/${cardId}`);
     }
 
 }

@@ -1,9 +1,8 @@
-import { ICard, ITag, IUser } from "../../models/models.interfaces";
+import { IColumn } from "../../models/models.interfaces";
 
-export interface ICardComponent extends ICard {
+export interface ICardComponent extends IColumn {
     index: number;
-    tags: ITag[];
-    users: IUser[];
+    boardId: string;
 }
 
 export interface IShowTask {

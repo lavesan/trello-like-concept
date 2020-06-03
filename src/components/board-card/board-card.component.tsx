@@ -6,7 +6,7 @@ import { AppContext } from '../../App.context';
 
 export default ({ index, children, data }: IBoardCardComponent) => {
 
-    const { setDraggedElem, setDraggedPos, boards } = useContext(AppContext);
+    const { setDraggedElem, setDraggedPos, board } = useContext(AppContext);
     const [expandHeight, setExpandHeight] = useState<number>(0);
     const [counter, setCounter] = useState<number>(0);
     const [deactivateTransition, setDeactivateTransition] = useState<boolean>(false);
@@ -62,7 +62,7 @@ export default ({ index, children, data }: IBoardCardComponent) => {
         setTimeout(() => {
             setDeactivateTransition(false);
         }, transitionTime)
-    }, [boards]);
+    }, [board]);
 
     return (
         <StyledBoardCard

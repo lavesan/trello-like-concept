@@ -8,14 +8,13 @@ import { BoardCardComponent } from '../board-card';
 import { CardComponent } from '../card';
 import { StyledAddAction } from '../add-action';
 import { AppContext } from '../../App.context';
-import { IBoardComponent } from './board.interfaces';
 import { StyledInvisibleInput } from '../invisible-input';
 import { IShowTask } from '../card/card.interfaces';
-import { ICard } from '../../models/models.interfaces';
+import { IColumn, IRow } from '../../models/models.interfaces';
 
-export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowTask) => {
+export default ({ columns, _id, name, setShow }: IRow & IShowTask) => {
 
-    const { setBoards, boards, draggedElem, draggedPos, setDraggedPos, boardService, reloadBoards } = useContext(AppContext);
+    const { setBoard, board, draggedElem, draggedPos, setDraggedPos, boardService, reloadBoards } = useContext(AppContext);
     const boardInputRef = useRef<HTMLInputElement>(null);
     const [boardRef, setBoardRef] = useState<HTMLDivElement | null>(null);
     const [showNewCard, setShowNewCard] = useState<boolean>(false);
@@ -27,16 +26,16 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
             return;
         }
 
-        const boardsCopy: IBoardComponent[] = [];
-        let filteredCardsToUpdate: ICard[] = [];
+        const boardsCopy: IRow[] = [];
+        let filteredCardsToUpdate: IColumn[] = [];
 
-        Object.assign(boardsCopy, boards);
+        Object.assign(boardsCopy, board.rows);
 
         for (let i = 0; i < boardsCopy.length; i++) {
 
-            let filteredCards = boardsCopy[i].cards.filter(({ id }) => id !== draggedElem.id);
+            let filteredCards = boardsCopy[i].columns.filter(({ _id }) => _id !== draggedElem._id);
 
-            if (boardsCopy[i].id === id) {
+            if (boardsCopy[i]._id === _id) {
 
                 let leftSide = filteredCards.slice(0, draggedPos);
                 const rightSide = filteredCards.slice(draggedPos);
@@ -46,19 +45,22 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
 
             }
 
-            boardsCopy[i].cards = filteredCards;
+            boardsCopy[i].columns = filteredCards;
 
         }
 
-        setBoards(boardsCopy);
+        setBoard({
+            ...board,
+            rows: boardsCopy,
+        });
 
-        for (let i = 0; i < filteredCardsToUpdate.length; i++) {
-            await boardService.updateCard({
-                ...filteredCardsToUpdate[i],
-                position: i,
-                boardId: id,
-            });
-        }
+        // TODO: Enviar uma requisição para o backend fazer isto, não o front.
+        // for (let i = 0; i < filteredCardsToUpdate.length; i++) {
+        //     await boardService.updateCard({
+        //         ...filteredCardsToUpdate[i],
+        //         boardId: _id,
+        //     });
+        // }
 
         reloadBoards();
 
@@ -82,36 +84,36 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
 
     const removeBoard = async () => {
 
-        for (const card of cards) {
-            await boardService.deleteCard(card.id);
-        }
-        boardService.deleteBoard(id)
-            .then(async () => {
+        // TODO: Alterar isto para meu backend remover esta Coluna desta Linha e atualizar tudo
+        // for (const card of cards) {
+        //     await boardService.deleteCard(card._id);
+        // }
+        // boardService.deleteRow(_id)
+        //     .then(async () => {
 
-                let lastPosition = -1;
-                for (const board of boards) {
+        //         let lastPosition = -1;
+        //         for (const board of rows) {
 
-                    if (board.id !== id) {
-                        lastPosition++;
-                        await boardService.updateBoard({
-                            ...board,
-                            position: lastPosition,
-                        })
-                    }
+        //             if (board.id !== _id) {
+        //                 lastPosition++;
+        //                 await boardService.updateBoard({
+        //                     ...board,
+        //                     position: lastPosition,
+        //                 })
+        //             }
 
-                }
-                reloadBoards();
-            });
+        //         }
+        //         reloadBoards();
+        //     });
 
     }
 
     const changeName = (e: any) => {
 
         e.preventDefault();
-        if (id) {
+        if (_id) {
             boardService.updateBoard({
-                id,
-                position,
+                _id,
                 name: newName,
             })
                 .then(() => {
@@ -122,7 +124,6 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
                 });
         } else {
             boardService.createBoard({
-                position,
                 name: newName,
             })
                 .then(() => {
@@ -139,7 +140,7 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
 
     const onNewNameBlur = (e: any) => {
         
-        if (!id && setShow) {
+        if (!_id && setShow) {
             setShow(false);
         }
         setNewName(name);
@@ -154,12 +155,12 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
     )
 
     useEffect(() => {
-        if (!id && boardRef) {
+        if (!_id && boardRef) {
             if (boardInputRef.current) {
                 boardInputRef.current.focus();
             }
         }
-    }, [boardRef, id])
+    }, [boardRef, _id])
 
     return (
         <StyledBoard ref={getBoardRef}>
@@ -180,21 +181,19 @@ export default ({ cards, id, name, position, setShow }: IBoardComponent & IShowT
                 </form>
             </header>
             <ul className="cards-list" onDrop={onDrop} onDragOver={onDragOver}>
-                {cards.map((card, index) => <CardComponent key={card.id} {...card} index={index} />)}
+                {columns.map((card, index) => <CardComponent key={card._id} {...card} boardId={_id} index={index} />)}
                 {showNewCard &&
                     <CardComponent
-                        boardId={id}
-                        userIds={[]}
-                        tagsIds={[]}
+                        boardId={_id}
                         tags={[]}
                         users={[]}
-                        id={0}
-                        title={''}
-                        position={cards.length}
-                        index={cards.length}
+                        _id={''}
+                        description={''}
+                        position={columns.length}
+                        index={columns.length}
                         setShow={setShowNewCard} />
                 }
-                <BoardCardComponent index={cards.length}>
+                <BoardCardComponent index={columns.length}>
                     <StyledAddAction onClick={createNewTask}>+ TASK</StyledAddAction>
                 </BoardCardComponent>
             </ul>

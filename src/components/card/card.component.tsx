@@ -14,8 +14,8 @@ import { AppContext } from '../../App.context';
 
 export default (props: ICardComponent & IShowTask) => {
 
-    const { boardService, reloadBoards, boards } = useContext(AppContext);
-    const [newTitle, setNewTitle] = useState<string>(props.title);
+    const { boardService, reloadBoards, board } = useContext(AppContext);
+    const [newTitle, setNewTitle] = useState<string>(props.description);
     const [titleInputRef, setTitleInputRef] = useState<HTMLInputElement | null>(null);
 
     const onChange = (e: any) => {
@@ -24,20 +24,20 @@ export default (props: ICardComponent & IShowTask) => {
 
     const onBlur = () => {
 
-        if (!props.id && props.setShow) {
+        if (!props._id && props.setShow) {
             props.setShow(false);
         }
-        setNewTitle(props.title);
+        setNewTitle(props.description);
 
     }
 
     const onSubmit = (e: any) => {
 
         e.preventDefault();
-        if (props.id) {
+        if (props._id) {
             boardService.updateCard({
                 ...props,
-                title: newTitle,
+                description: newTitle,
             })
                 .then(res => {
                     reloadBoards();
@@ -45,7 +45,7 @@ export default (props: ICardComponent & IShowTask) => {
         } else {
 
             boardService.createCard({
-                title: newTitle,
+                description: newTitle,
                 boardId: props.boardId,
                 position: props.index,
                 tagsIds: [],
@@ -61,17 +61,18 @@ export default (props: ICardComponent & IShowTask) => {
 
     const removeCard = () => {
 
-        const board = boards.find(boar => boar.id === props.boardId);
+        const row = board.rows.find(row => row._id === props.boardId);
 
-        boardService.deleteCard(props.id)
+        // TODO: Deixar meu backend cuidando de tudo isso ai que tem no then
+        boardService.deleteCard(props._id)
             .then(async () => {
 
-                if (board) {
+                if (row) {
 
                     let lastPosition = -1;
-                    for (const card of board.cards) {
+                    for (const card of row.columns) {
     
-                        if (card.id !== props.id) {
+                        if (card._id !== props._id) {
                             lastPosition++;
                             await boardService.updateCard({
                                 ...card,
@@ -95,10 +96,10 @@ export default (props: ICardComponent & IShowTask) => {
     )
 
     useEffect(() => {
-        if (!props.id && titleInputRef) {
+        if (!props._id && titleInputRef) {
             titleInputRef.focus();
         }
-    }, [titleInputRef, props.id])
+    }, [titleInputRef, props._id])
 
     return (
         <BoardCardComponent data={props} index={props.index}>
@@ -117,7 +118,7 @@ export default (props: ICardComponent & IShowTask) => {
                 </div>
                 <div className="card-aditionals">
                     <div className="card-aditionals--tags">
-                        {props.tags.map(tag => <StyledTagButton>{tag.name}</StyledTagButton>)}
+                        {props.tags.map(tag => <StyledTagButton>{tag}</StyledTagButton>)}
                     </div>
                     <div className="card-aditionals--tags">
                         {props.users.map(user => <CircleImgComponent imgUrl={user.imgUrl || emptyUser} />)}

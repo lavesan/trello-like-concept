@@ -8,7 +8,7 @@ import { FilterSectionComponent } from '../../components/filter-section';
 
 export default () => {
 
-    const { boards } = useContext(AppContext);
+    const { board } = useContext(AppContext);
     const [showNewBoard, setShowNewBoard] = useState<boolean>(false);
 
     const createNewBoard = () => {
@@ -19,13 +19,12 @@ export default () => {
         <StyledHome>
             <FilterSectionComponent />
             <section className="boards-section">
-                {boards.map(board => <BoardComponent key={board.id} {...board} />)}
+                {board.rows.map(board => <BoardComponent key={board._id} {...board} />)}
                 {showNewBoard && (
                     <BoardComponent
-                        id={0}
+                        _id={''}
                         name=""
-                        position={boards.length}
-                        cards={[]}
+                        columns={[]}
                         setShow={setShowNewBoard} />
                 )}
                 <div>
