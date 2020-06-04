@@ -4,6 +4,22 @@ Um gerenciador de quadros simples para você gerenciar suas tarefas
 
 ! Necessária a [API](https://github.com/lavesan/trello-like-concept-api) para executar o projeto
 
+## Features
+
+- Adicionar Quadros
+- Adicionar Tabelas
+- Adicionar Cards
+- Deletar Tabelas
+- Deletar Cards
+- Drag and drop de cards
+- Alterar descrição do Card
+- Alterar nome da Tabela
+- Adicionar usuários
+- Adicionar usuários no quadro
+- Adicionar tags no quadro
+- Adicionar usuários nos cards
+- Adicionar tags nos cards
+
 ## Iniciando o projeto
 
 Para iniciar este projeto você precisará ter previamente as seguintes configurações:
