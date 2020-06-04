@@ -14,11 +14,19 @@ import { IColumn, IRow } from '../../models/models.interfaces';
 
 export default ({ columns, _id, name, setShow }: IRow & IShowTask) => {
 
-    const { setBoard, board, draggedElem, draggedPos, setDraggedPos, boardService, reloadBoards } = useContext(AppContext);
-    const boardInputRef = useRef<HTMLInputElement>(null);
-    const [boardRef, setBoardRef] = useState<HTMLDivElement | null>(null);
+    const {
+        board,
+        setBoard,
+        draggedElem,
+        draggedPos,
+        setDraggedPos,
+        boardService,
+        reloadBoards
+    }                                   = useContext(AppContext);
+    const [boardRef, setBoardRef]       = useState<HTMLDivElement | null>(null);
     const [showNewCard, setShowNewCard] = useState<boolean>(false);
-    const [newName, setNewName] = useState<string>(name);
+    const [newName, setNewName]         = useState<string>(name);
+    const boardInputRef                 = useRef<HTMLInputElement>(null);
 
     const onDrop = async (e: any) => {
 
@@ -54,6 +62,18 @@ export default ({ columns, _id, name, setShow }: IRow & IShowTask) => {
             rows: boardsCopy,
         });
 
+        await boardService.moveColumn({
+            boardId: board._id,
+            newRowId: _id,
+            oldRowId: draggedElem.boardId,
+            newPosition: draggedPos,
+            columnId: draggedElem._id,
+        })
+            .then(() => {
+                reloadBoards();
+                setDraggedPos(0);
+            })
+
         // TODO: Enviar uma requisição para o backend fazer isto, não o front.
         // for (let i = 0; i < filteredCardsToUpdate.length; i++) {
         //     await boardService.updateCard({
@@ -62,9 +82,6 @@ export default ({ columns, _id, name, setShow }: IRow & IShowTask) => {
         //     });
         // }
 
-        reloadBoards();
-
-        setDraggedPos(0);
 
     }
     
@@ -83,37 +100,19 @@ export default ({ columns, _id, name, setShow }: IRow & IShowTask) => {
     }
 
     const removeBoard = async () => {
-
-        // TODO: Alterar isto para meu backend remover esta Coluna desta Linha e atualizar tudo
-        // for (const card of cards) {
-        //     await boardService.deleteCard(card._id);
-        // }
-        // boardService.deleteRow(_id)
-        //     .then(async () => {
-
-        //         let lastPosition = -1;
-        //         for (const board of rows) {
-
-        //             if (board.id !== _id) {
-        //                 lastPosition++;
-        //                 await boardService.updateBoard({
-        //                     ...board,
-        //                     position: lastPosition,
-        //                 })
-        //             }
-
-        //         }
-        //         reloadBoards();
-        //     });
-
+        boardService.deleteRow(_id)
+            .then(() => {
+                reloadBoards();
+            });
     }
 
     const changeName = (e: any) => {
 
         e.preventDefault();
         if (_id) {
-            boardService.updateBoard({
-                _id,
+            boardService.updateRow({
+                boardId: board._id,
+                rowId: _id,
                 name: newName,
             })
                 .then(() => {
@@ -123,8 +122,9 @@ export default ({ columns, _id, name, setShow }: IRow & IShowTask) => {
                     reloadBoards();
                 });
         } else {
-            boardService.createBoard({
+            boardService.createRow({
                 name: newName,
+                boardId: board._id,
             })
                 .then(() => {
                     setNewName('');

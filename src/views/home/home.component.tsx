@@ -8,7 +8,7 @@ import { FilterSectionComponent } from '../../components/filter-section';
 
 export default () => {
 
-    const { board } = useContext(AppContext);
+    const { board }                       = useContext(AppContext);
     const [showNewBoard, setShowNewBoard] = useState<boolean>(false);
 
     const createNewBoard = () => {

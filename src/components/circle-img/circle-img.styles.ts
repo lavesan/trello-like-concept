@@ -4,8 +4,10 @@ import { ISelectedComp } from './circle-img.interfaces';
 export const StyledCircleImg = styled.div<Partial<ISelectedComp>>`
     ${({ theme, selected }) => css`
         border-radius: 50%;
+        min-width: 25px;
         width: 25px;
         height: 25px;
+        min-height: 25px;
         overflow: hidden;
         border: thin solid transparent;
 

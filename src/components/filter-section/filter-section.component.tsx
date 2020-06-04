@@ -1,52 +1,54 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useContext } from 'react';
+import { Grid, Button, Header } from 'semantic-ui-react';
 
 import { StyledFilterSection } from './filter-section.styles';
-import { StyledSearchInput } from '../search-input';
-import { SlideDownComponent } from '../slide-down';
+// import { StyledSearchInput } from '../search-input';
+// import { SlideDownComponent } from '../slide-down';
 import { StyledTagButton } from '../tag-button';
 import { CircleImgComponent } from '../circle-img';
 import { AppContext } from '../../App.context';
 import { ISearchCard } from '../../services/board.interfaces';
-import { mapDataIntoBoards } from '../../helpers/boards.helpers';
 import emptyUser from '../../assets/imgs/empty-user.jpg';
 
 export default () => {
 
-    const { boardService, board, setBoard } = useContext(AppContext);
-    const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
+    const { board, setShowTagBoardModal, setShowUserBoardModal } = useContext(AppContext);
+    // const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
     const [filter, setFilter] = useState<ISearchCard>({
         q: '',
     });
 
-    const visibilityAdvancedFilter = () => {
-        setShowAdvanced(f => !f);
+    const toogleUserBoardModal = () => {
+        setShowUserBoardModal((f: boolean) => !f);
     }
 
-    const onFieldChange = (e: any) => {
-        setFilter(f => ({
-            ...f,
-            q: e.target.value,
-        }))
+    const toogleTagBoardModal = () => {
+        setShowTagBoardModal((f: boolean) => !f);
     }
 
-    useEffect(() => {
-        boardService.getCards(filter)
-            .then(res => {
+    // const visibilityAdvancedFilter = () => {
+    //     setShowAdvanced(f => !f);
+    // }
 
-                const mappedBoard = mapDataIntoBoards(board)
+    // const onFieldChange = (e: any) => {
+    //     setFilter(f => ({
+    //         ...f,
+    //         q: e.target.value,
+    //     }))
+    // }
 
-                setBoard(mappedBoard);
-
-            });
-    }, [filter])
+    // useEffect(() => {
+    //     boardService.getCards(filter)
+    //         .then(res => {
+    //             reloadBoards();
+    //         });
+    // }, [filter])
 
     return (
         <StyledFilterSection>
-            <h1>{board.name}</h1>
+            <Header as='h1' color='grey'>{board.name}</Header>
             <div>
-                <div className="filter-input-container">
+                {/* <div className="filter-input-container">
                     <StyledSearchInput
                         placeholder="Pesquisar"
                         value={filter.q}
@@ -62,7 +64,7 @@ export default () => {
                         }
                     </button>
                 </div>
-                <SlideDownComponent show={showAdvanced}>
+                <SlideDownComponent show={showAdvanced}> */}
                     <div className="advanced-filters-container">
                         <div className="advanced-filters-container--users">
                             {board.users.map(user => (
@@ -94,7 +96,15 @@ export default () => {
                             ))}
                         </div>
                     </div>
-                </SlideDownComponent>
+                {/* </SlideDownComponent> */}
+                <Grid className="modal-actions">
+                    <Grid.Column mobile={16} tablet={4} computer={3}>
+                        <Button style={{ width: '100%' }} onClick={toogleUserBoardModal}>Adicionar usuário</Button>
+                    </Grid.Column>
+                    <Grid.Column mobile={16} tablet={4} computer={3}>
+                        <Button style={{ width: '100%' }} onClick={toogleTagBoardModal}>Adicionar tag</Button>
+                    </Grid.Column>
+                </Grid>
             </div>
         </StyledFilterSection>
     )

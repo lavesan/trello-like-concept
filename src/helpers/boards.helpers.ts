@@ -31,3 +31,11 @@ export const mapDataIntoBoards = (board: IBoard): IBoard => {
   };
 
 }
+
+export const emptyBoard = ({
+  _id: '',
+  name: '',
+  tags: [],
+  users: [],
+  rows: [],
+})

@@ -5,4 +5,5 @@ export interface ISelectedComp {
 export interface ICircleImgComponent extends Partial<ISelectedComp> {
     imgUrl: string;
     className?: string;
+    title?: string;
 }

@@ -34,6 +34,7 @@ export const StyledFilterSection = styled.section`
             flex-flow: row nowrap;
             align-items: center;
             margin-bottom: 10px;
+            overflow-x: auto;
 
             .advanced-filters-container--users {
                 display: flex;
@@ -82,6 +83,10 @@ export const StyledFilterSection = styled.section`
                     margin-right: 10px;
                 }
             }
+        }
+
+        .modal-actions {
+            margin-bottom: 10px;
         }
     `}
 `;

@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import axios from 'axios';
+import 'react-responsive-modal/styles.css';
+import 'semantic-ui-css/semantic.min.css';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 

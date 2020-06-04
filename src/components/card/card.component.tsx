@@ -14,9 +14,16 @@ import { AppContext } from '../../App.context';
 
 export default (props: ICardComponent & IShowTask) => {
 
-    const { boardService, reloadBoards, board } = useContext(AppContext);
-    const [newTitle, setNewTitle] = useState<string>(props.description);
-    const [titleInputRef, setTitleInputRef] = useState<HTMLInputElement | null>(null);
+    const {
+        boardService,
+        reloadBoards,
+        board,
+        setShowTagColumnModal,
+        setShowUserColumnModal,
+        setSelectedCard,
+    }                                           = useContext(AppContext);
+    const [newTitle, setNewTitle]               = useState<string>(props.description);
+    const [titleInputRef, setTitleInputRef]     = useState<HTMLInputElement | null>(null);
 
     const onChange = (e: any) => {
         setNewTitle(e.target.value);
@@ -36,8 +43,10 @@ export default (props: ICardComponent & IShowTask) => {
         e.preventDefault();
         if (props._id) {
             boardService.updateCard({
-                ...props,
+                boardId: board._id,
                 description: newTitle,
+                rowId: props.boardId,
+                columnId: props._id,
             })
                 .then(res => {
                     reloadBoards();
@@ -46,10 +55,7 @@ export default (props: ICardComponent & IShowTask) => {
 
             boardService.createCard({
                 description: newTitle,
-                boardId: props.boardId,
-                position: props.index,
-                tagsIds: [],
-                userIds: [],
+                rowId: props.boardId,
             })
                 .then(res => {
                     setNewTitle('');
@@ -60,32 +66,10 @@ export default (props: ICardComponent & IShowTask) => {
     }
 
     const removeCard = () => {
-
-        const row = board.rows.find(row => row._id === props.boardId);
-
-        // TODO: Deixar meu backend cuidando de tudo isso ai que tem no then
-        boardService.deleteCard(props._id)
+        boardService.deleteCard({ columnId: props._id, rowId: props.boardId })
             .then(async () => {
-
-                if (row) {
-
-                    let lastPosition = -1;
-                    for (const card of row.columns) {
-    
-                        if (card._id !== props._id) {
-                            lastPosition++;
-                            await boardService.updateCard({
-                                ...card,
-                                position: lastPosition,
-                            })
-                        }
-    
-                    }
-
-                }
                 reloadBoards();
             });
-
     }
 
     const getInputRef = useCallback(
@@ -113,6 +97,14 @@ export default (props: ICardComponent & IShowTask) => {
                     <Dropdown className="card-info-container--dropdown" icon={<FontAwesomeIcon icon={faEllipsisV} />}>
                         <Dropdown.Menu>
                             <Dropdown.Item text='Excluir' onClick={removeCard} />
+                            <Dropdown.Item text='Adicionar Tag' onClick={() => {
+                                setSelectedCard({ ...props, rowId: props.boardId });
+                                setShowTagColumnModal(true);
+                            }} />
+                            <Dropdown.Item text='Adicionar Usuário' onClick={() => {
+                                setSelectedCard({ ...props, rowId: props.boardId });
+                                setShowUserColumnModal(true);
+                            }} />
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
@@ -121,7 +113,7 @@ export default (props: ICardComponent & IShowTask) => {
                         {props.tags.map(tag => <StyledTagButton>{tag}</StyledTagButton>)}
                     </div>
                     <div className="card-aditionals--tags">
-                        {props.users.map(user => <CircleImgComponent imgUrl={user.imgUrl || emptyUser} />)}
+                        {props.users.map(user => <CircleImgComponent title={user.name} imgUrl={user.imgUrl || emptyUser} />)}
                     </div>
                 </div>
             </StyledCardComponent>
