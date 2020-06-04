@@ -74,15 +74,6 @@ export default ({ columns, _id, name, setShow }: IRow & IShowTask) => {
                 setDraggedPos(0);
             })
 
-        // TODO: Enviar uma requisição para o backend fazer isto, não o front.
-        // for (let i = 0; i < filteredCardsToUpdate.length; i++) {
-        //     await boardService.updateCard({
-        //         ...filteredCardsToUpdate[i],
-        //         boardId: _id,
-        //     });
-        // }
-
-
     }
     
     const onDragOver = (e: any) => {

@@ -42,14 +42,14 @@ export const StyledCardComponent = styled.form`
         }
 
         :hover {
-            .card-info-container--dropdown {
+            .card-info-container .card-info-container--dropdown {
                 display: flex;
             }
         }
 
         @media(max-width: 720px) {
-            .card-info-container--dropdown {
-                display: flex;
+            .card-info-container .card-info-container--dropdown {
+                display: flex !important;
             }
         }
     `}
