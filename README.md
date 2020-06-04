@@ -4,9 +4,11 @@ Um gerenciador de quadros simples para você gerenciar suas tarefas
 
 ! Necessária a [API](https://github.com/lavesan/trello-like-concept-api) para executar o projeto
 
-<img width="150" src="https://valderyportfolio.s3.amazonaws.com/projetos/trello-screenshot-1.png" />
-<img width="150" src="https://valderyportfolio.s3.amazonaws.com/projetos/trello-screenshot-2.png" />
-<img width="150" src="https://valderyportfolio.s3.amazonaws.com/projetos/trello-screenshot-3.png" />
+<div style="display: flex; flex-flow: row wrap;">
+  <img width="150" src="https://valderyportfolio.s3.amazonaws.com/projetos/trello-screenshot-1.png" />
+  <img width="150" src="https://valderyportfolio.s3.amazonaws.com/projetos/trello-screenshot-2.png" />
+  <img width="150" src="https://valderyportfolio.s3.amazonaws.com/projetos/trello-screenshot-3.png" />
+</div>
 
 ## Features
 
